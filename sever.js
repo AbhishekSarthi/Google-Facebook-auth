@@ -2,6 +2,9 @@ const express = require('express');
 const passport = require('passport');
 // require('./auth.js');
 const app = express();
+const port = process.env.PORT || 5000;
+
+app.use(express.static(__dirname + '/public'));
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -135,5 +138,5 @@ app.get('/profile', checkUserLoggedIn, (req, res) => {
 // );
 
 app.listen(5000, () => {
-    console.log('Server Running on PORT:5000');
+    console.log(`Server Running on PORT ${port}`);
 });
