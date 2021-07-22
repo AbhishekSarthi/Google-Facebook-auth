@@ -4,8 +4,6 @@ const passport = require('passport');
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(express.static(__dirname + '/public'));
-
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const expressSession = require('express-session');
