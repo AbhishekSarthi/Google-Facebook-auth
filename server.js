@@ -4,6 +4,11 @@ const googleRoutes = require('./routes/google');
 const app = express();
 const port = process.env.PORT || 5000;
 
+app.use(express.static(path.join(__dirname, './build')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './build'));
+});
+
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const expressSession = require('express-session');
