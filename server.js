@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-// require('./auth.js');
+const googleRoutes = require('./routes/google');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -17,7 +17,6 @@ passport.use(
             callbackURL: '/google',
         },
         (accessToken, refreshToken, profile, callback) => {
-            console.log(profile);
             callback(null, profile);
         }
     )
@@ -31,7 +30,6 @@ passport.use(
             callbackURL: '/facebook',
         },
         (accessToken, refreshToken, profile, callback) => {
-            console.log(profile);
             callback(null, profile);
         }
     )
@@ -57,83 +55,51 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Unprotected Route / HOME PAGE
-app.get('/', (req, res) => {
-    // console.log('heleloele', JSON.stringify(req));
-
-    res.send(
-        req.user
-            ? req.user
-            : `not Logged in <a href="/login/google" >GOOGLE </a> or <a href="/login/facebook" >FACEBOOK </a>`
-    );
-    // res.send(req.user);
-});
-
-app.get(
-    '/login/google',
-    passport.authenticate('google', { scope: ['profile'] })
-);
-app.get(
-    '/login/facebook',
-    passport.authenticate('facebook', { scope: ['profile'] })
-);
-
-app.get('/google', passport.authenticate('google'), (req, res) => {
-    res.redirect('/profile');
-});
-
-app.get('/facebook', passport.authenticate('facebook'), (req, res) => {
-    res.redirect('/profile');
-});
-
-app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
-});
-
-// Middleware - Check user is Logged in
-const checkUserLoggedIn = (req, res, next) => {
-    req.user ? next() : res.sendStatus(401);
-};
-
-//Protected Route.
-app.get('/profile', checkUserLoggedIn, (req, res) => {
-    res.send(
-        `<h1>${req.user.displayName}'s Profile Page</h1><a href="/logout">Logout</a>`
-    );
-});
-
+app.use('/', googleRoutes);
+// //Unprotected Route / HOME PAGE
 // app.get('/', (req, res) => {
-//     res.send('<a href="/auth/google">Authenticate Google</a>');
-// });
+//     // console.log('heleloele', JSON.stringify(req));
 
-// app.get('/failed', (req, res) => {
-//     res.send('<h1>Log in Failed :(</h1>');
+//     res.send(
+//         req.user
+//             ? req.user
+//             : `not Logged in <a href="/login/google" >GOOGLE </a> or <a href="/login/facebook" >FACEBOOK </a>`
+//     );
 // });
 
 // app.get(
-//     '/auth/google',
+//     '/login/google',
 //     passport.authenticate('google', { scope: ['profile'] })
 // );
-
-// // app.get(
-// //     '/auth/google/callback',
-// //     passport.authenticate('google', {
-// //         successRedirect: '/home',
-// //         failureRedirect: '/',
-// //     }),
-// //     function (req, res) {
-// //         // Successful authentication, redirect home.
-// //         res.redirect('/home');
-// //     }
-// // );
 // app.get(
-//     '/auth/google/callback',
-//     passport.authenticate('google', { failureRedirect: '/failed' }),
-//     (req, res) => {
-//         res.redirect('/home');
-//     }
+//     '/login/facebook',
+//     passport.authenticate('facebook', { scope: ['profile'] })
 // );
+
+// app.get('/google', passport.authenticate('google'), (req, res) => {
+//     res.redirect('/profile');
+// });
+
+// app.get('/facebook', passport.authenticate('facebook'), (req, res) => {
+//     res.redirect('/profile');
+// });
+
+// app.get('/logout', (req, res) => {
+//     req.logout();
+//     res.redirect('/');
+// });
+
+// // Middleware - Check user is Logged in
+// const checkUserLoggedIn = (req, res, next) => {
+//     req.user ? next() : res.sendStatus(401);
+// };
+
+// //Protected Route.
+// app.get('/profile', checkUserLoggedIn, (req, res) => {
+//     res.send(
+//         `<h1>${req.user.displayName}'s Profile Page</h1><a href="/logout">Logout</a>`
+//     );
+// });
 
 app.listen(5000, () => {
     console.log(`Server Running on PORT ${port}`);
