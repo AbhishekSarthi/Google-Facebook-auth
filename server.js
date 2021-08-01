@@ -1,17 +1,12 @@
 const express = require('express');
 const app = express();
 const passport = require('passport');
-const path = require('path');
 const googleRoutes = require('./routes/google-routes');
 const facebookRoutes = require('./routes/facebook-routes');
 const unprotectedRoutes = require('./routes/unportected-route');
 const protectedRoutes = require('./routes/protected-route');
 const logoutRoute = require('./routes/logout-route');
 const port = process.env.PORT || 5000;
-
-app.get('/home', (req, res) => {
-    res.send('Home Page');
-});
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -60,7 +55,7 @@ app.use(
     })
 );
 
-//Configure Passport
+//Configure Passport and session
 app.use(passport.initialize());
 app.use(passport.session());
 
