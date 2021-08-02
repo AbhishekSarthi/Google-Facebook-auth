@@ -1,11 +1,9 @@
 const express = require('express');
 const app = express();
 const passport = require('passport');
-const googleRoutes = require('./routes/google-routes');
-const facebookRoutes = require('./routes/facebook-routes');
-const unprotectedRoutes = require('./routes/unportected-route');
-const protectedRoutes = require('./routes/protected-route');
-const logoutRoute = require('./routes/logout-route');
+
+const Routes = require('./routes/all-routes');
+
 const port = process.env.PORT || 5000;
 
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -59,11 +57,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', googleRoutes);
-app.use('/', facebookRoutes);
-app.use('/', unprotectedRoutes);
-app.use('/', protectedRoutes);
-app.use('/', logoutRoute);
+app.use('/', Routes);
 
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
